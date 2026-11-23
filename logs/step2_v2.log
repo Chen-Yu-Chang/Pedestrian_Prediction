@@ -1,0 +1,48 @@
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+loading 300W-LP faces ...
+300W-LP: 116300 training faces, 6115 held-out faces (unseen identities)
+JAAD pseudo-labelled heads: 6115
+validation sets ready, training ...
+student parameters: 1.08 M
+ep   1 | train 65.97 deg | held-out 300W-LP MAE 15.2 | AFLW2000 MAE 16px:17.4 24px:17.3 32px:17.0 48px:16.9 | 40s
+ep   2 | train 48.20 deg | held-out 300W-LP MAE 13.4 | AFLW2000 MAE 16px:16.2 24px:15.9 32px:15.4 48px:15.2 | 38s
+ep   3 | train 42.21 deg | held-out 300W-LP MAE 11.9 | AFLW2000 MAE 16px:14.9 24px:14.2 32px:13.8 48px:13.5 | 38s
+ep   4 | train 39.43 deg | held-out 300W-LP MAE 11.6 | AFLW2000 MAE 16px:14.0 24px:13.1 32px:12.6 48px:12.4 | 38s
+ep   5 | train 36.27 deg | held-out 300W-LP MAE 10.9 | AFLW2000 MAE 16px:13.9 24px:12.4 32px:12.0 48px:11.6 | 37s
+ep   6 | train 33.83 deg | held-out 300W-LP MAE 9.6 | AFLW2000 MAE 16px:13.3 24px:11.9 32px:11.4 48px:11.1 | 38s
+ep   7 | train 32.28 deg | held-out 300W-LP MAE 10.2 | AFLW2000 MAE 16px:13.4 24px:12.2 32px:11.7 48px:11.3 | 38s
+ep   8 | train 31.41 deg | held-out 300W-LP MAE 9.9 | AFLW2000 MAE 16px:13.5 24px:12.1 32px:11.5 48px:11.1 | 38s
+ep   9 | train 31.36 deg | held-out 300W-LP MAE 9.4 | AFLW2000 MAE 16px:12.9 24px:11.4 32px:10.9 48px:10.5 | 38s
+ep  10 | train 29.61 deg | held-out 300W-LP MAE 9.6 | AFLW2000 MAE 16px:12.6 24px:11.3 32px:10.8 48px:10.6 | 37s
+ep  11 | train 29.10 deg | held-out 300W-LP MAE 9.3 | AFLW2000 MAE 16px:12.0 24px:10.8 32px:10.4 48px:10.0 | 38s
+ep  12 | train 29.01 deg | held-out 300W-LP MAE 9.3 | AFLW2000 MAE 16px:12.6 24px:10.9 32px:10.5 48px:10.0 | 38s
+ep  13 | train 27.71 deg | held-out 300W-LP MAE 8.7 | AFLW2000 MAE 16px:11.9 24px:10.5 32px:10.0 48px:9.7 | 38s
+ep  14 | train 26.84 deg | held-out 300W-LP MAE 9.8 | AFLW2000 MAE 16px:11.9 24px:10.3 32px:9.8 48px:9.5 | 37s
+ep  15 | train 26.13 deg | held-out 300W-LP MAE 9.7 | AFLW2000 MAE 16px:12.1 24px:10.6 32px:10.0 48px:9.7 | 38s
+ep  16 | train 25.26 deg | held-out 300W-LP MAE 9.2 | AFLW2000 MAE 16px:12.1 24px:10.4 32px:9.8 48px:9.4 | 38s
+ep  17 | train 24.40 deg | held-out 300W-LP MAE 8.8 | AFLW2000 MAE 16px:12.0 24px:10.2 32px:9.8 48px:9.4 | 38s
+ep  18 | train 25.01 deg | held-out 300W-LP MAE 9.8 | AFLW2000 MAE 16px:12.5 24px:10.9 32px:10.3 48px:9.9 | 38s
+ep  19 | train 25.60 deg | held-out 300W-LP MAE 9.6 | AFLW2000 MAE 16px:12.0 24px:10.2 32px:9.7 48px:9.3 | 37s
+ep  20 | train 26.31 deg | held-out 300W-LP MAE 10.4 | AFLW2000 MAE 16px:11.8 24px:10.2 32px:9.7 48px:9.2 | 38s
+ep  21 | train 23.30 deg | held-out 300W-LP MAE 8.7 | AFLW2000 MAE 16px:11.6 24px:9.8 32px:9.3 48px:8.9 | 38s
+ep  22 | train 21.92 deg | held-out 300W-LP MAE 11.5 | AFLW2000 MAE 16px:11.5 24px:9.8 32px:9.2 48px:8.9 | 38s
+ep  23 | train 21.06 deg | held-out 300W-LP MAE 11.5 | AFLW2000 MAE 16px:11.4 24px:9.7 32px:9.2 48px:8.9 | 38s
+ep  24 | train 20.96 deg | held-out 300W-LP MAE 10.3 | AFLW2000 MAE 16px:11.6 24px:9.8 32px:9.4 48px:8.9 | 38s
+ep  25 | train 20.16 deg | held-out 300W-LP MAE 10.9 | AFLW2000 MAE 16px:11.5 24px:9.6 32px:9.2 48px:8.8 | 38s
+ep  26 | train 19.73 deg | held-out 300W-LP MAE 10.2 | AFLW2000 MAE 16px:11.4 24px:9.6 32px:9.1 48px:8.7 | 38s
+ep  27 | train 19.29 deg | held-out 300W-LP MAE 10.9 | AFLW2000 MAE 16px:11.4 24px:9.5 32px:9.0 48px:8.7 | 38s
+ep  28 | train 18.63 deg | held-out 300W-LP MAE 10.0 | AFLW2000 MAE 16px:11.3 24px:9.5 32px:9.0 48px:8.7 | 38s
+ep  29 | train 18.31 deg | held-out 300W-LP MAE 9.5 | AFLW2000 MAE 16px:11.4 24px:9.6 32px:9.1 48px:8.7 | 38s
+ep  30 | train 17.98 deg | held-out 300W-LP MAE 10.6 | AFLW2000 MAE 16px:11.2 24px:9.4 32px:9.0 48px:8.6 | 38s
+ep  31 | train 17.59 deg | held-out 300W-LP MAE 9.9 | AFLW2000 MAE 16px:11.2 24px:9.4 32px:8.9 48px:8.6 | 38s
+ep  32 | train 17.32 deg | held-out 300W-LP MAE 10.4 | AFLW2000 MAE 16px:11.2 24px:9.5 32px:9.0 48px:8.6 | 37s
+ep  33 | train 17.06 deg | held-out 300W-LP MAE 10.7 | AFLW2000 MAE 16px:11.3 24px:9.4 32px:9.0 48px:8.6 | 38s
+ep  34 | train 16.90 deg | held-out 300W-LP MAE 10.8 | AFLW2000 MAE 16px:11.1 24px:9.4 32px:8.9 48px:8.5 | 38s
+ep  35 | train 16.74 deg | held-out 300W-LP MAE 11.5 | AFLW2000 MAE 16px:11.1 24px:9.4 32px:8.9 48px:8.5 | 38s
+ep  36 | train 16.70 deg | held-out 300W-LP MAE 10.9 | AFLW2000 MAE 16px:11.1 24px:9.3 32px:8.9 48px:8.5 | 38s
+ep  37 | train 16.58 deg | held-out 300W-LP MAE 10.9 | AFLW2000 MAE 16px:11.1 24px:9.3 32px:8.9 48px:8.5 | 37s
+ep  38 | train 16.48 deg | held-out 300W-LP MAE 10.8 | AFLW2000 MAE 16px:11.0 24px:9.3 32px:8.8 48px:8.5 | 38s
+ep  39 | train 16.44 deg | held-out 300W-LP MAE 10.7 | AFLW2000 MAE 16px:11.1 24px:9.3 32px:8.9 48px:8.5 | 38s
+ep  40 | train 16.44 deg | held-out 300W-LP MAE 11.0 | AFLW2000 MAE 16px:11.2 24px:9.4 32px:8.9 48px:8.5 | 38s
+best holdout MAE 8.68 deg -> student_stage1.pt

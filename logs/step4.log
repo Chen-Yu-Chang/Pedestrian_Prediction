@@ -1,0 +1,19 @@
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+JAAD train heads with look label: 15780 (looking 20%)
+ep   1 | loss 1.302 | JAAD val look AUC 0.790
+ep   2 | loss 1.173 | JAAD val look AUC 0.803
+ep   3 | loss 1.088 | JAAD val look AUC 0.796
+ep   4 | loss 1.005 | JAAD val look AUC 0.808
+ep   5 | loss 0.932 | JAAD val look AUC 0.798
+ep   6 | loss 0.859 | JAAD val look AUC 0.787
+ep   7 | loss 0.774 | JAAD val look AUC 0.781
+ep   8 | loss 0.706 | JAAD val look AUC 0.775
+ep   9 | loss 0.659 | JAAD val look AUC 0.768
+ep  10 | loss 0.602 | JAAD val look AUC 0.770
+ep  11 | loss 0.567 | JAAD val look AUC 0.763
+ep  12 | loss 0.533 | JAAD val look AUC 0.761
+ep  13 | loss 0.519 | JAAD val look AUC 0.762
+ep  14 | loss 0.508 | JAAD val look AUC 0.758
+ep  15 | loss 0.510 | JAAD val look AUC 0.759
+best val look AUC 0.808 -> student_stage2.pt

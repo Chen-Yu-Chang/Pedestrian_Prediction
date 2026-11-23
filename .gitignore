@@ -1,0 +1,6 @@
+data/
+outputs_head/*.npz
+*.tgz
+*.zip
+demo/*_raw.mp4
+__pycache__/

@@ -1,0 +1,27 @@
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+
+AFLW2000 MAE (deg, mean of pitch/yaw/roll) by head size:
+model    student_stage1  student_stage2    teacher
+size_px                                           
+12                13.68           13.78  52.299999
+16                11.93           11.88  43.439999
+24                10.46           10.34  26.629999
+32                 9.93            9.81  18.290001
+48                 9.65            9.54  10.590000
+clean             14.63           15.80   4.500000
+
+JAAD test, AUC for "looking" by head size (stored pixels):
+method     student_stage1_yaw_rule  student_stage2_look_head  student_stage2_yaw_rule  teacher_yaw_rule
+head_size                                                                                              
+0-8px                        0.612                     0.603                    0.716             0.931
+8-16px                       0.643                     0.714                    0.645             0.474
+16-32px                      0.718                     0.824                    0.755             0.581
+>=32px                       0.820                     0.925                    0.856             0.770
+all                          0.758                     0.870                    0.792             0.648
+head_size    n  looking
+    0-8px   60 0.033333
+   8-16px  510 0.178431
+  16-32px 1251 0.202238
+   >=32px 2004 0.166168
+      all 3825 0.177516

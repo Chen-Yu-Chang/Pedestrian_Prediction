@@ -1,0 +1,155 @@
+== Checking inputs
+  ok       data/sixdrepnet/best_a2.pt
+  ok       data/HPE/300W_LP
+  ok       data/HPE/AFLW2000
+  ok       exp_classifiers.py
+  ok       data/JAAD/annotations
+  ok       outputs_pose/pose_train.pkl
+  ok       data/jaad_fullres/images/train
+  ok       outputs_pose/pose_val.pkl
+  ok       data/jaad_fullres/images/val
+  ok       outputs_pose/pose_test.pkl
+  ok       data/jaad_fullres/images/test
+All inputs found.
+== Step 1 skipped (--from 4)
+== Step 2 skipped (--from 4)
+== Step 3 skipped (--from 4)
+== Step 4: student stage 2: looking fine-tune
+   python3 hp_03_train_student.py --stage 2 --workers 4
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+JAAD train heads with look label: 15780 (looking 20%)
+ep   1 | loss 1.302 | JAAD val look AUC 0.790
+ep   2 | loss 1.173 | JAAD val look AUC 0.803
+ep   3 | loss 1.088 | JAAD val look AUC 0.796
+ep   4 | loss 1.005 | JAAD val look AUC 0.808
+ep   5 | loss 0.932 | JAAD val look AUC 0.798
+ep   6 | loss 0.859 | JAAD val look AUC 0.787
+ep   7 | loss 0.774 | JAAD val look AUC 0.781
+ep   8 | loss 0.706 | JAAD val look AUC 0.775
+ep   9 | loss 0.659 | JAAD val look AUC 0.768
+ep  10 | loss 0.602 | JAAD val look AUC 0.770
+ep  11 | loss 0.567 | JAAD val look AUC 0.763
+ep  12 | loss 0.533 | JAAD val look AUC 0.761
+ep  13 | loss 0.519 | JAAD val look AUC 0.762
+ep  14 | loss 0.508 | JAAD val look AUC 0.758
+ep  15 | loss 0.510 | JAAD val look AUC 0.759
+best val look AUC 0.808 -> student_stage2.pt
+   done in 2 min (log: logs/step4.log)
+== Step 5: evaluate teacher vs student
+   python3 hp_04_eval_heads.py
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+
+AFLW2000 MAE (deg, mean of pitch/yaw/roll) by head size:
+model    student_stage1  student_stage2    teacher
+size_px                                           
+12                13.68           13.78  52.299999
+16                11.93           11.88  43.439999
+24                10.46           10.34  26.629999
+32                 9.93            9.81  18.290001
+48                 9.65            9.54  10.590000
+clean             14.63           15.80   4.500000
+
+JAAD test, AUC for "looking" by head size (stored pixels):
+method     student_stage1_yaw_rule  student_stage2_look_head  student_stage2_yaw_rule  teacher_yaw_rule
+head_size                                                                                              
+0-8px                        0.612                     0.603                    0.716             0.931
+8-16px                       0.643                     0.714                    0.645             0.474
+16-32px                      0.718                     0.824                    0.755             0.581
+>=32px                       0.820                     0.925                    0.856             0.770
+all                          0.758                     0.870                    0.792             0.648
+head_size    n  looking
+    0-8px   60 0.033333
+   8-16px  510 0.178431
+  16-32px 1251 0.202238
+   >=32px 2004 0.166168
+      all 3825 0.177516
+   done in 0 min (log: logs/step5.log)
+== Step 6: per-frame head features
+   python3 hp_05_head_features.py
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+head_train.pkl: 15780 rows, usable heads 68%, mean P(look) 0.41
+head_val.pkl: 3407 rows, usable heads 74%, mean P(look) 0.40
+head_test.pkl: 3825 rows, usable heads 76%, mean P(look) 0.42
+   done in 0 min (log: logs/step6.log)
+== Step 7: Transformer: box vs box + head pose
+   python3 exp_transformer.py --sets bbox bbox+head --mod_drop 0.15
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+{'split': 'fold0', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.854, 'seq_bacc': 0.785, 'seq_f1': 0.618, 'ped_auc': 0.892, 'ped_bacc': 0.798, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.818, 'auc_tte_1-2s': 0.779, 'auc_tte_2-3s': 0.763, 'auc_tte_3s+': nan, 'sec': 4.28}
+{'split': 'fold0', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.848, 'seq_bacc': 0.74, 'seq_f1': 0.656, 'ped_auc': 0.891, 'ped_bacc': 0.812, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.673, 'auc_tte_1-2s': 0.634, 'auc_tte_2-3s': 0.684, 'auc_tte_3s+': nan, 'sec': 3.261}
+{'split': 'fold0', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.819, 'seq_bacc': 0.694, 'seq_f1': 0.607, 'ped_auc': 0.822, 'ped_bacc': 0.791, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.645, 'auc_tte_1-2s': 0.826, 'auc_tte_2-3s': 0.842, 'auc_tte_3s+': nan, 'sec': 4.083}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.83, 'seq_bacc': 0.73, 'seq_f1': 0.583, 'ped_auc': 0.856, 'ped_bacc': 0.72, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.629, 'auc_tte_1-2s': 0.563, 'auc_tte_2-3s': 0.7, 'auc_tte_3s+': nan, 'sec': 3.303}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.83, 'seq_bacc': 0.758, 'seq_f1': 0.6, 'ped_auc': 0.853, 'ped_bacc': 0.733, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.716, 'auc_tte_1-2s': 0.665, 'auc_tte_2-3s': 0.7, 'auc_tte_3s+': nan, 'sec': 3.132}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.853, 'seq_bacc': 0.759, 'seq_f1': 0.636, 'ped_auc': 0.892, 'ped_bacc': 0.833, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.606, 'auc_tte_1-2s': 0.569, 'auc_tte_2-3s': 0.7, 'auc_tte_3s+': nan, 'sec': 3.915}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.889, 'seq_bacc': 0.812, 'seq_f1': 0.604, 'ped_auc': 0.969, 'ped_bacc': 0.883, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.622, 'auc_tte_1-2s': 0.483, 'auc_tte_2-3s': 0.517, 'auc_tte_3s+': 0.95, 'sec': 3.095}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.92, 'seq_bacc': 0.85, 'seq_f1': 0.618, 'ped_auc': 0.979, 'ped_bacc': 0.963, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.746, 'auc_tte_1-2s': 0.508, 'auc_tte_2-3s': 0.517, 'auc_tte_3s+': 0.85, 'sec': 2.24}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.874, 'seq_bacc': 0.768, 'seq_f1': 0.586, 'ped_auc': 0.936, 'ped_bacc': 0.833, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.58, 'auc_tte_1-2s': 0.37, 'auc_tte_2-3s': 0.414, 'auc_tte_3s+': 1.0, 'sec': 2.591}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.886, 'seq_bacc': 0.842, 'seq_f1': 0.62, 'ped_auc': 0.958, 'ped_bacc': 0.929, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.526, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 1.924}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.888, 'seq_bacc': 0.848, 'seq_f1': 0.615, 'ped_auc': 0.966, 'ped_bacc': 0.907, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.459, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 2.511}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.901, 'seq_bacc': 0.831, 'seq_f1': 0.587, 'ped_auc': 0.97, 'ped_bacc': 0.879, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.523, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 3.103}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.927, 'seq_bacc': 0.851, 'seq_f1': 0.773, 'ped_auc': 0.982, 'ped_bacc': 0.935, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.733, 'auc_tte_1-2s': 0.636, 'auc_tte_2-3s': 0.498, 'auc_tte_3s+': 0.491, 'sec': 1.871}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.88, 'seq_bacc': 0.735, 'seq_f1': 0.709, 'ped_auc': 0.975, 'ped_bacc': 0.81, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.532, 'auc_tte_1-2s': 0.494, 'auc_tte_2-3s': 0.397, 'auc_tte_3s+': 0.42, 'sec': 2.039}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.851, 'seq_bacc': 0.714, 'seq_f1': 0.665, 'ped_auc': 0.945, 'ped_bacc': 0.83, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.489, 'auc_tte_1-2s': 0.413, 'auc_tte_2-3s': 0.338, 'auc_tte_3s+': 0.288, 'sec': 2.09}
+{'split': 'fold0', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.963, 'seq_bacc': 0.871, 'seq_f1': 0.797, 'ped_auc': 0.927, 'ped_bacc': 0.917, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.957, 'auc_tte_1-2s': 0.956, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': nan, 'sec': 0.371}
+{'split': 'fold0', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.968, 'seq_bacc': 0.94, 'seq_f1': 0.802, 'ped_auc': 0.947, 'ped_bacc': 0.85, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.967, 'auc_tte_1-2s': 0.956, 'auc_tte_2-3s': 0.974, 'auc_tte_3s+': nan, 'sec': 0.394}
+{'split': 'fold0', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.855, 'seq_bacc': 0.66, 'seq_f1': 0.628, 'ped_auc': 0.78, 'ped_bacc': 0.6, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.83, 'auc_tte_1-2s': 0.86, 'auc_tte_2-3s': 0.974, 'auc_tte_3s+': nan, 'sec': 0.373}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.663, 'seq_bacc': 0.443, 'seq_f1': 0.427, 'ped_auc': 0.758, 'ped_bacc': 0.47, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.683, 'auc_tte_1-2s': 0.563, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.348}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.696, 'seq_bacc': 0.45, 'seq_f1': 0.431, 'ped_auc': 0.778, 'ped_bacc': 0.47, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.71, 'auc_tte_1-2s': 0.634, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.346}
+{'split': 'fold1', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.693, 'seq_bacc': 0.463, 'seq_f1': 0.438, 'ped_auc': 0.768, 'ped_bacc': 0.485, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.702, 'auc_tte_1-2s': 0.601, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.345}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.965, 'seq_bacc': 0.872, 'seq_f1': 0.681, 'ped_auc': 0.933, 'ped_bacc': 0.833, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.963, 'auc_tte_1-2s': 0.992, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 0.8, 'sec': 0.411}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.895, 'seq_bacc': 0.659, 'seq_f1': 0.672, 'ped_auc': 0.842, 'ped_bacc': 0.717, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.914, 'auc_tte_1-2s': 0.89, 'auc_tte_2-3s': 0.828, 'auc_tte_3s+': 0.8, 'sec': 0.972}
+{'split': 'fold2', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.963, 'seq_bacc': 0.862, 'seq_f1': 0.664, 'ped_auc': 0.925, 'ped_bacc': 0.817, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.965, 'auc_tte_1-2s': 0.992, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 0.8, 'sec': 0.41}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.792, 'seq_bacc': 0.764, 'seq_f1': 0.402, 'ped_auc': 0.851, 'ped_bacc': 0.741, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.873, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.964}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.78, 'seq_bacc': 0.711, 'seq_f1': 0.344, 'ped_auc': 0.839, 'ped_bacc': 0.724, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.903, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.561}
+{'split': 'fold3', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.792, 'seq_bacc': 0.681, 'seq_f1': 0.309, 'ped_auc': 0.839, 'ped_bacc': 0.69, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.907, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.429}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.0, 'seq_auc': 0.961, 'seq_bacc': 0.878, 'seq_f1': 0.858, 'ped_auc': 0.927, 'ped_bacc': 0.831, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.93, 'auc_tte_1-2s': 0.946, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 1.0, 'sec': 0.4}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.0, 'seq_auc': 0.965, 'seq_bacc': 0.889, 'seq_f1': 0.863, 'ped_auc': 0.927, 'ped_bacc': 0.812, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.931, 'auc_tte_1-2s': 0.957, 'auc_tte_2-3s': 0.986, 'auc_tte_3s+': 1.0, 'sec': 0.404}
+{'split': 'fold4', 'features': 'bbox', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.0, 'seq_auc': 0.951, 'seq_bacc': 0.926, 'seq_f1': 0.899, 'ped_auc': 0.936, 'ped_bacc': 0.887, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.913, 'auc_tte_1-2s': 0.933, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 1.0, 'sec': 0.741}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.807, 'seq_bacc': 0.75, 'seq_f1': 0.563, 'ped_auc': 0.84, 'ped_bacc': 0.717, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.593, 'auc_tte_1-2s': 0.216, 'auc_tte_2-3s': 0.447, 'auc_tte_3s+': nan, 'sec': 3.231}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.822, 'seq_bacc': 0.637, 'seq_f1': 0.6, 'ped_auc': 0.9, 'ped_bacc': 0.706, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.729, 'auc_tte_1-2s': 0.403, 'auc_tte_2-3s': 0.421, 'auc_tte_3s+': nan, 'sec': 2.581}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.818, 'seq_bacc': 0.749, 'seq_f1': 0.564, 'ped_auc': 0.895, 'ped_bacc': 0.679, 'n_seq': 2299, 'n_stay_ped': 15, 'n_cross_ped': 92, 'auc_tte_0-1s': 0.675, 'auc_tte_1-2s': 0.668, 'auc_tte_2-3s': 0.553, 'auc_tte_3s+': nan, 'sec': 4.708}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.929, 'seq_bacc': 0.856, 'seq_f1': 0.619, 'ped_auc': 0.97, 'ped_bacc': 0.855, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.644, 'auc_tte_1-2s': 0.475, 'auc_tte_2-3s': 0.675, 'auc_tte_3s+': nan, 'sec': 2.189}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.897, 'seq_bacc': 0.778, 'seq_f1': 0.522, 'ped_auc': 0.962, 'ped_bacc': 0.81, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.531, 'auc_tte_1-2s': 0.616, 'auc_tte_2-3s': 0.675, 'auc_tte_3s+': nan, 'sec': 1.813}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.876, 'seq_bacc': 0.791, 'seq_f1': 0.59, 'ped_auc': 0.922, 'ped_bacc': 0.767, 'n_seq': 2318, 'n_stay_ped': 13, 'n_cross_ped': 100, 'auc_tte_0-1s': 0.681, 'auc_tte_1-2s': 0.408, 'auc_tte_2-3s': 0.675, 'auc_tte_3s+': nan, 'sec': 2.746}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.827, 'seq_bacc': 0.755, 'seq_f1': 0.601, 'ped_auc': 0.932, 'ped_bacc': 0.801, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.336, 'auc_tte_1-2s': 0.049, 'auc_tte_2-3s': 0.207, 'auc_tte_3s+': 0.8, 'sec': 3.67}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.888, 'seq_bacc': 0.779, 'seq_f1': 0.614, 'ped_auc': 0.974, 'ped_bacc': 0.911, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.376, 'auc_tte_1-2s': 0.118, 'auc_tte_2-3s': 0.552, 'auc_tte_3s+': 1.0, 'sec': 1.978}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.855, 'seq_bacc': 0.723, 'seq_f1': 0.571, 'ped_auc': 0.91, 'ped_bacc': 0.802, 'n_seq': 2403, 'n_stay_ped': 14, 'n_cross_ped': 94, 'auc_tte_0-1s': 0.376, 'auc_tte_1-2s': 0.153, 'auc_tte_2-3s': 0.586, 'auc_tte_3s+': 0.95, 'sec': 2.127}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.89, 'seq_bacc': 0.808, 'seq_f1': 0.524, 'ped_auc': 0.98, 'ped_bacc': 0.747, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.656, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 2.349}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.912, 'seq_bacc': 0.858, 'seq_f1': 0.585, 'ped_auc': 0.986, 'ped_bacc': 0.846, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.548, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 2.416}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.854, 'seq_bacc': 0.794, 'seq_f1': 0.583, 'ped_auc': 0.948, 'ped_bacc': 0.841, 'n_seq': 2388, 'n_stay_ped': 13, 'n_cross_ped': 91, 'auc_tte_0-1s': 0.677, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 2.254}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.834, 'seq_bacc': 0.735, 'seq_f1': 0.663, 'ped_auc': 0.909, 'ped_bacc': 0.828, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.462, 'auc_tte_1-2s': 0.507, 'auc_tte_2-3s': 0.407, 'auc_tte_3s+': 0.494, 'sec': 3.48}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.857, 'seq_bacc': 0.723, 'seq_f1': 0.676, 'ped_auc': 0.935, 'ped_bacc': 0.818, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.562, 'auc_tte_1-2s': 0.551, 'auc_tte_2-3s': 0.571, 'auc_tte_3s+': 0.605, 'sec': 2.265}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'all', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.833, 'seq_bacc': 0.708, 'seq_f1': 0.674, 'ped_auc': 0.907, 'ped_bacc': 0.798, 'n_seq': 2481, 'n_stay_ped': 19, 'n_cross_ped': 83, 'auc_tte_0-1s': 0.378, 'auc_tte_1-2s': 0.468, 'auc_tte_2-3s': 0.397, 'auc_tte_3s+': 0.699, 'sec': 2.674}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.874, 'seq_bacc': 0.668, 'seq_f1': 0.663, 'ped_auc': 0.9, 'ped_bacc': 0.65, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.896, 'auc_tte_1-2s': 0.745, 'auc_tte_2-3s': 0.947, 'auc_tte_3s+': nan, 'sec': 0.599}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.802, 'seq_bacc': 0.626, 'seq_f1': 0.603, 'ped_auc': 0.787, 'ped_bacc': 0.5, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.855, 'auc_tte_1-2s': 0.66, 'auc_tte_2-3s': 0.632, 'auc_tte_3s+': nan, 'sec': 0.672}
+{'split': 'fold0', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.888, 'seq_bacc': 0.69, 'seq_f1': 0.72, 'ped_auc': 0.82, 'ped_bacc': 0.667, 'n_seq': 272, 'n_stay_ped': 5, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.913, 'auc_tte_1-2s': 0.81, 'auc_tte_2-3s': 0.737, 'auc_tte_3s+': nan, 'sec': 0.91}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.633, 'seq_bacc': 0.44, 'seq_f1': 0.425, 'ped_auc': 0.753, 'ped_bacc': 0.455, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.671, 'auc_tte_1-2s': 0.48, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.369}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.73, 'seq_bacc': 0.493, 'seq_f1': 0.453, 'ped_auc': 0.763, 'ped_bacc': 0.485, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.736, 'auc_tte_1-2s': 0.605, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.369}
+{'split': 'fold1', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.648, 'seq_bacc': 0.5, 'seq_f1': 0.457, 'ped_auc': 0.727, 'ped_bacc': 0.5, 'n_seq': 239, 'n_stay_ped': 6, 'n_cross_ped': 33, 'auc_tte_0-1s': 0.7, 'auc_tte_1-2s': 0.505, 'auc_tte_2-3s': 0.95, 'auc_tte_3s+': nan, 'sec': 0.366}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.929, 'seq_bacc': 0.873, 'seq_f1': 0.701, 'ped_auc': 0.917, 'ped_bacc': 0.883, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.907, 'auc_tte_1-2s': 0.94, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 1.0, 'sec': 0.512}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.851, 'seq_bacc': 0.747, 'seq_f1': 0.714, 'ped_auc': 0.858, 'ped_bacc': 0.825, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.866, 'auc_tte_1-2s': 0.803, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 0.85, 'sec': 1.01}
+{'split': 'fold2', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.965, 'seq_bacc': 0.844, 'seq_f1': 0.636, 'ped_auc': 0.95, 'ped_bacc': 0.8, 'n_seq': 275, 'n_stay_ped': 4, 'n_cross_ped': 30, 'auc_tte_0-1s': 0.956, 'auc_tte_1-2s': 0.974, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 1.0, 'sec': 0.371}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.727, 'seq_bacc': 0.636, 'seq_f1': 0.252, 'ped_auc': 0.69, 'ped_bacc': 0.638, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.779, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.839}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.735, 'seq_bacc': 0.645, 'seq_f1': 0.334, 'ped_auc': 0.69, 'ped_bacc': 0.523, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.839, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.462}
+{'split': 'fold3', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.685, 'seq_bacc': 0.715, 'seq_f1': 0.463, 'ped_auc': 0.667, 'ped_bacc': 0.713, 'n_seq': 273, 'n_stay_ped': 3, 'n_cross_ped': 29, 'auc_tte_0-1s': 0.784, 'auc_tte_1-2s': nan, 'auc_tte_2-3s': nan, 'auc_tte_3s+': nan, 'sec': 0.363}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 0, 'mod_drop': 0.15, 'seq_auc': 0.946, 'seq_bacc': 0.829, 'seq_f1': 0.754, 'ped_auc': 0.919, 'ped_bacc': 0.865, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.894, 'auc_tte_1-2s': 0.917, 'auc_tte_2-3s': 1.0, 'auc_tte_3s+': 1.0, 'sec': 0.367}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 1, 'mod_drop': 0.15, 'seq_auc': 0.956, 'seq_bacc': 0.875, 'seq_f1': 0.851, 'ped_auc': 0.962, 'ped_bacc': 0.923, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.932, 'auc_tte_1-2s': 0.944, 'auc_tte_2-3s': 0.996, 'auc_tte_3s+': 1.0, 'sec': 0.558}
+{'split': 'fold4', 'features': 'bbox+head', 'setting': 'before_dp', 'model': 'Transformer', 'seed': 2, 'mod_drop': 0.15, 'seq_auc': 0.911, 'seq_bacc': 0.802, 'seq_f1': 0.767, 'ped_auc': 0.94, 'ped_bacc': 0.904, 'n_seq': 401, 'n_stay_ped': 9, 'n_cross_ped': 26, 'auc_tte_0-1s': 0.904, 'auc_tte_1-2s': 0.886, 'auc_tte_2-3s': 0.976, 'auc_tte_3s+': 0.912, 'sec': 0.627}
+
+mean ± std over folds and seeds
+                           seq_auc       seq_bacc        ped_auc   auc_tte_0-1s   auc_tte_1-2s   auc_tte_2-3s    auc_tte_3s+
+setting   features                                                                                                          
+all       bbox        0.87 ± 0.033  0.781 ± 0.054  0.926 ± 0.053   0.62 ± 0.104  0.578 ± 0.137  0.589 ± 0.162  0.666 ± 0.304
+          bbox+head   0.86 ± 0.037  0.763 ± 0.057   0.931 ± 0.04  0.548 ± 0.133  0.386 ± 0.204  0.514 ± 0.142  0.758 ± 0.197
+before_dp bbox        0.86 ± 0.115  0.738 ± 0.176   0.865 ± 0.07  0.877 ± 0.099   0.857 ± 0.16  0.968 ± 0.049     0.9 ± 0.11
+          bbox+head  0.819 ± 0.117   0.692 ± 0.14  0.823 ± 0.105  0.842 ± 0.088  0.772 ± 0.174  0.928 ± 0.118   0.96 ± 0.065
+saved /home/ubuntu/ped/ped/outputs_pose/results_transformer_cv_bbox_bbox+head.csv
+   done in 1 min (log: logs/step7.log)
+
+== Finished. Main results:
+   outputs_head/eval_aflw_by_size.csv         head-pose error vs head size (teacher vs student)
+   outputs_head/eval_jaad_look.csv            'looking' AUC vs head size
+   outputs_pose/results_transformer_cv_bbox_bbox+head.csv   main test: box vs box + head pose

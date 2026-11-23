@@ -1,0 +1,44 @@
+/opt/pytorch/lib/python3.13/site-packages/torch/cuda/__init__.py:68: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+student parameters: 1.08 M
+ep   1 | train 38.54 deg | AFLW2000 MAE 16px:22.3 24px:22.3 32px:22.3 48px:22.4 | 30s
+ep   2 | train 23.58 deg | AFLW2000 MAE 16px:24.2 24px:23.1 32px:22.8 48px:22.6 | 28s
+ep   3 | train 19.00 deg | AFLW2000 MAE 16px:24.7 24px:24.3 32px:24.4 48px:24.0 | 28s
+ep   4 | train 16.40 deg | AFLW2000 MAE 16px:23.0 24px:22.3 32px:22.3 48px:22.2 | 28s
+ep   5 | train 14.74 deg | AFLW2000 MAE 16px:21.3 24px:20.6 32px:20.2 48px:19.9 | 28s
+ep   6 | train 13.96 deg | AFLW2000 MAE 16px:23.1 24px:22.6 32px:22.2 48px:22.1 | 28s
+ep   7 | train 13.45 deg | AFLW2000 MAE 16px:22.7 24px:22.5 32px:21.9 48px:21.8 | 28s
+ep   8 | train 13.03 deg | AFLW2000 MAE 16px:22.5 24px:21.9 32px:21.7 48px:21.4 | 28s
+ep   9 | train 12.87 deg | AFLW2000 MAE 16px:22.9 24px:22.0 32px:21.9 48px:21.3 | 28s
+ep  10 | train 12.43 deg | AFLW2000 MAE 16px:23.9 24px:23.4 32px:23.4 48px:23.1 | 28s
+ep  11 | train 12.29 deg | AFLW2000 MAE 16px:23.6 24px:23.1 32px:23.3 48px:22.8 | 28s
+ep  12 | train 12.35 deg | AFLW2000 MAE 16px:22.0 24px:21.8 32px:21.8 48px:21.6 | 28s
+ep  13 | train 12.40 deg | AFLW2000 MAE 16px:24.0 24px:22.7 32px:22.4 48px:21.9 | 28s
+ep  14 | train 11.76 deg | AFLW2000 MAE 16px:23.7 24px:23.3 32px:23.4 48px:22.8 | 28s
+ep  15 | train 11.38 deg | AFLW2000 MAE 16px:23.5 24px:23.1 32px:22.8 48px:22.6 | 28s
+ep  16 | train 11.33 deg | AFLW2000 MAE 16px:22.8 24px:22.2 32px:21.8 48px:21.1 | 28s
+ep  17 | train 11.03 deg | AFLW2000 MAE 16px:22.1 24px:21.2 32px:20.7 48px:20.2 | 28s
+ep  18 | train 10.85 deg | AFLW2000 MAE 16px:22.4 24px:21.8 32px:21.5 48px:21.2 | 28s
+ep  19 | train 10.63 deg | AFLW2000 MAE 16px:22.5 24px:21.8 32px:21.4 48px:21.2 | 28s
+ep  20 | train 10.51 deg | AFLW2000 MAE 16px:23.7 24px:22.8 32px:22.6 48px:22.1 | 28s
+ep  21 | train 10.48 deg | AFLW2000 MAE 16px:22.4 24px:21.6 32px:21.4 48px:20.9 | 28s
+ep  22 | train 10.22 deg | AFLW2000 MAE 16px:24.4 24px:23.7 32px:23.4 48px:23.1 | 28s
+ep  23 | train 10.18 deg | AFLW2000 MAE 16px:23.7 24px:22.7 32px:22.4 48px:22.1 | 28s
+ep  24 | train 9.86 deg | AFLW2000 MAE 16px:23.7 24px:23.0 32px:22.6 48px:22.1 | 28s
+ep  25 | train 9.68 deg | AFLW2000 MAE 16px:23.5 24px:23.0 32px:23.0 48px:22.2 | 28s
+ep  26 | train 9.78 deg | AFLW2000 MAE 16px:24.5 24px:23.8 32px:23.9 48px:23.5 | 28s
+ep  27 | train 9.56 deg | AFLW2000 MAE 16px:24.2 24px:23.8 32px:23.4 48px:22.9 | 28s
+ep  28 | train 9.44 deg | AFLW2000 MAE 16px:24.1 24px:23.8 32px:23.7 48px:22.9 | 28s
+ep  29 | train 9.26 deg | AFLW2000 MAE 16px:24.3 24px:23.6 32px:23.4 48px:23.0 | 28s
+ep  30 | train 9.17 deg | AFLW2000 MAE 16px:24.7 24px:24.1 32px:23.6 48px:23.2 | 28s
+ep  31 | train 9.05 deg | AFLW2000 MAE 16px:23.4 24px:22.8 32px:22.7 48px:22.2 | 28s
+ep  32 | train 9.00 deg | AFLW2000 MAE 16px:23.9 24px:23.5 32px:23.4 48px:23.0 | 28s
+ep  33 | train 8.96 deg | AFLW2000 MAE 16px:23.8 24px:23.3 32px:23.1 48px:22.5 | 28s
+ep  34 | train 8.85 deg | AFLW2000 MAE 16px:23.9 24px:23.3 32px:23.3 48px:22.6 | 28s
+ep  35 | train 8.83 deg | AFLW2000 MAE 16px:24.0 24px:23.5 32px:23.5 48px:22.8 | 28s
+ep  36 | train 8.78 deg | AFLW2000 MAE 16px:24.2 24px:23.8 32px:23.6 48px:22.9 | 28s
+ep  37 | train 8.75 deg | AFLW2000 MAE 16px:24.3 24px:24.0 32px:23.7 48px:23.0 | 28s
+ep  38 | train 8.69 deg | AFLW2000 MAE 16px:24.2 24px:23.9 32px:23.6 48px:22.9 | 28s
+ep  39 | train 8.71 deg | AFLW2000 MAE 16px:24.4 24px:24.1 32px:23.8 48px:23.0 | 28s
+ep  40 | train 8.73 deg | AFLW2000 MAE 16px:24.1 24px:23.8 32px:23.5 48px:22.8 | 28s
+best mean MAE 20.51 deg -> student_stage1.pt
